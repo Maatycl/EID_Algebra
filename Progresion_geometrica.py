@@ -1,5 +1,4 @@
 
-
 def calcular_progresion(n):
     a1 = 5
     r = 3

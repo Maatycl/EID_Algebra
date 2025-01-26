@@ -4,6 +4,8 @@ import tkinter as tk
 from CTkMessagebox import CTkMessagebox
 from tkinter import ttk
 from Progresion_geometrica import calcular_progresion
+from Binomios import ciclo_repetitivo, binomio_directo
+import math
 
 class AplicacionConPestanas(ctk.CTk):
 
@@ -35,7 +37,7 @@ class AplicacionConPestanas(ctk.CTk):
     
 
     def configurar_pestana1(self):
-        # Dividir la pestaña en dos frames
+        # Creacion del frame
         frame_formulario = ctk.CTkFrame(self.tab1)
         frame_formulario.pack(side="left", fill="both", expand=True, padx=10, pady=10)
 
@@ -65,27 +67,63 @@ class AplicacionConPestanas(ctk.CTk):
 
 
     def configurar_pestana2(self):
-        #Dividir la pestaña en tres frames
+        # Creacion del frame
+        frame_formulario2 = ctk.CTkFrame(self.tab2)
+        frame_formulario2.pack(side="left", fill="both", expand=True, padx=10, pady=10)
 
-        #frame con imágenes
-        frame_superior = ctk.CTkFrame(self.tab2)  #deja un frame arriba
-        frame_superior.pack(side="top", fill="both", expand=True, padx=0, pady=0)
+        # Campo para n
+        label_n = ctk.CTkLabel(frame_formulario2, text="Ingrese n:")
+        label_n.pack(pady=8)
+        self.entry_n = ctk.CTkEntry(frame_formulario2)
+        self.entry_n.pack(pady=8)
 
-        frame_tarjetas = ctk.CTkFrame(frame_superior, fg_color="transparent", border_color="black", border_width=2)
-        frame_tarjetas.pack(side="left", fill="both", expand=False, padx=10, pady=10)
+        # Campo para a
+        label_a = ctk.CTkLabel(frame_formulario2, text="Ingrese a:")
+        label_a.pack(pady=8)
+        self.entry_a = ctk.CTkEntry(frame_formulario2)
+        self.entry_a.pack(pady=8)
 
-        #frame con treeview y botones + label
-        frame_inferior = ctk.CTkFrame(self.tab2)
-        frame_inferior.pack(side="bottom", fill="both", expand=True, padx=0, pady=0)   # deja un frame abajo
+        # Campo para b
+        label_b = ctk.CTkLabel(frame_formulario2, text="Ingrese b:")
+        label_b.pack(pady=8)
+        self.entry_b = ctk.CTkEntry(frame_formulario2)
+        self.entry_b.pack(pady=8)
 
-        #Este será un frame entre medio de los otros 2 frames, el cual estará en el espacio sobrante del 'frame_inferior'.
-        frame_boton = ctk.CTkFrame(self.tab2)  
-        frame_boton.pack(fill="both", expand=True, padx=0, pady=5)
+        # Botón para calcular
+        boton_calcular = ctk.CTkButton(frame_formulario2, text="Calcular", command=self.mostrar_binomios)
+        boton_calcular.pack(pady=10)
+
+        # Resultado
+        self.label_resultado2 = ctk.CTkLabel(frame_formulario2, text="")
+        self.label_resultado2.pack(pady=8)
 
 
-        #Boton de generar boleta
-        self.boton_boleta=ctk.CTkButton(frame_inferior, text="Generar boleta")
-        self.boton_boleta.pack(side="bottom", expand=False, padx=5, pady=15)
+    def mostrar_binomios(self):
+        try:
+            # Obtener valores ingresados por el usuario
+            n = int(self.entry_n.get())
+            a = float(self.entry_a.get())
+            b = float(self.entry_b.get())
+
+            # Cálculo del teorema del binomio
+            resultado_ciclo = ciclo_repetitivo(a, b, n)
+            resultado_directo = binomio_directo(a, b, n)
+
+            # Mostrar resultados
+            resultado_texto = (f"Resultado usando el teorema del binomio: {resultado_ciclo}\n"
+                               f"Resultado usando el binomio directo: {resultado_directo}\n")
+
+            if math.isclose(float(resultado_ciclo), float(resultado_directo), rel_tol=1e-9):
+                resultado_texto += "\n¡Los resultados coinciden!"
+            else:
+                resultado_texto += "\nHay una discrepancia en los resultados."
+
+            self.label_resultado2.configure(text=resultado_texto)
+
+        except ValueError:
+            self.label_resultado2.configure(text="Por favor, ingrese valores válidos.")
+        except Exception as e:
+            self.label_resultado2.configure(text=f"Error: {str(e)}")
 
 
 if __name__ == "__main__":
